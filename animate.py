@@ -109,6 +109,12 @@ class Map:
 map = Map(MAP,CHAR_MAPPING)
 path =os.path.join(DIR, LOG_NAME)
 games = os.listdir(path)
+games =np.array(games)[
+    np.argsort(np.array([
+        int("".join(i for i in game if i.isdigit())) 
+        for game in games
+        ]), axis=- 1)
+    ]
 for game in games:
     print(game)
     moves = np.load(os.path.join(path, game))
