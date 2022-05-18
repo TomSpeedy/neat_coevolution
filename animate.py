@@ -7,7 +7,7 @@ import os
 from matplotlib.animation import FuncAnimation
 
 DIR = "logs"
-LOG_NAME = "Results" if False else "Neat_Test"
+LOG_NAME = "Results" if True else "Neat_Test"
 MAP = "map.txt"
 
 WALL      = "x"
@@ -26,7 +26,7 @@ CHAR_MAPPING = {
 
 COLOR_MAPPING = ["black", "white", "blue", "green", "red"]
 
-ACTIONS = [[0,0], [-1,0], [1, 0], [0,-1], [0, 1]]
+ACTIONS = [[-1,0], [1, 0], [0,-1], [0, 1]]
 VISION = 1
 SCENT = 5
 
@@ -116,7 +116,6 @@ games =np.array(games)[
         ]), axis=- 1)
     ]
 for game in games:
-    print(game)
     moves = np.load(os.path.join(path, game))
     fig, ax = plt.subplots()
     ax.set_title("Generation "+game)
