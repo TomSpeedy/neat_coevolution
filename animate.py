@@ -7,7 +7,7 @@ import os
 from matplotlib.animation import FuncAnimation
 
 DIR = "logs"
-LOG_NAME = "Neat_Test"
+LOG_NAME = "Results" if False else "Neat_Test"
 MAP = "map.txt"
 
 WALL      = "x"
