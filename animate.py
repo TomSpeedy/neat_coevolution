@@ -136,8 +136,8 @@ for game in games:
     ani = FuncAnimation(fig, update, frames=moves,
                         init_func=init, blit=True, repeat=False)
     plt.show()
-    fits_seek = np.load(FITNESS_SEEK_FILE)
-    fits_hide = np.load(FITNESS_HIDE_FILE)
+fits_seek = np.load(FITNESS_SEEK_FILE)
+fits_hide = np.load(FITNESS_HIDE_FILE)
 plt.plot(np.arange(0, fits_seek.shape[0]), fits_seek)
 plt.show()
 plt.plot(np.arange(0, fits_hide.shape[0]), fits_hide)
