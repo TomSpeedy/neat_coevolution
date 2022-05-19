@@ -33,6 +33,8 @@ COLOR_MAPPING = ["black", "white", "blue", "green", "red"]
 MAP_SIMPLE_NAME = "map.txt"
 
 ACTIONS = np.array([[-1,0], [1, 0], [0,-1], [0, 1]])
+ACTIONS_SEEKER =  np.array([[-1,0], [1, 0], [0,-1], [0, 1], [-1,-1], [-1,1], [1,-1],[1,1]])
+
 VISION = 1
 SCENT = 5
 
@@ -61,19 +63,22 @@ class Map:
         self.map_layout[self.start_seeker_pos[0],self.start_seeker_pos[1]] = char_mapping[FREE_SPACE]
         
         #initialize rewards
-        self.hider_reward = np.zeros_like(self.map_layout)-1
+        hider_reward = np.zeros_like(self.map_layout)-1
         queue = np.where(self.map_layout==char_mapping[SAFE_ZONE])
-        self.hider_reward[queue]=0
+        hider_reward[queue]=0
         queue = [(x,y)for x,y in zip(*queue)]
         while len(queue)>0:
             new_queue=[]
             for x,y in queue:
                 for a_x,a_y in ACTIONS:
                     if (self.get_map_layout_pos([x+a_x,y+a_y])!=char_mapping[WALL] and
-                        self.hider_reward[x+a_x,y+a_y]<0):
-                            self.hider_reward[x+a_x,y+a_y]=self.hider_reward[x,y]+1
+                        hider_reward[x+a_x,y+a_y]<0):
+                            hider_reward[x+a_x,y+a_y]=hider_reward[x,y]+1
                             new_queue.append((x+a_x,y+a_y))
             queue=new_queue
+            
+        self.hider_reward =hider_reward/np.max(hider_reward)
+          
         self.reset()
     
     def reset(self):
@@ -88,7 +93,7 @@ class Map:
 
     def update(self):
         pos =self.hider_pos
-        self.hider_reward_penalty[pos[0], pos[1]]+=1
+        self.hider_reward_penalty[pos[0], pos[1]]= self.hider_reward[pos[0], pos[1]]
         self.scent[pos[0],pos[1]]=SCENT
         self.scent-=1
         self.scent = np.clip(self.scent, 0, SCENT)
@@ -144,7 +149,8 @@ class Map:
 
     def do_action(self, agent, action):
         pos = self.get_agent_pos(agent)
-        new_pos = pos + ACTIONS[action]
+        usable_actions = ACTIONS_SEEKER if agent == SEEKER else ACTIONS
+        new_pos = pos + usable_actions[action]
         if self.is_free(new_pos, agent):
             self.move_agent(agent, new_pos)
     
@@ -153,20 +159,23 @@ class Map:
 
     def get_reward(self,pos):
          return max(self.hider_reward[pos[0], pos[1]] - self.hider_reward_penalty[pos[0], pos[1]],0)
-     
+
 map = Map(MAP_SIMPLE_NAME,CHAR_MAPPING)
 
 path =os.path.join(DIR, LOG_NAME)
 games = os.listdir(path)
 
 if(len(games)%2==0):
-    games =np.array(games)[
-        np.concatenate(np.argsort(np.array([
-            int("".join(i for i in game if i.isdigit())) 
-            for game in games
-            ]), axis=- 1,kind="stable").reshape(-1,2))
-        ]
-    
+    games =np.concatenate(
+        np.take_along_axis(
+            np.array(games).reshape(2,-1),
+            np.argsort(np.array([
+                int("".join(i for i in game if i.isdigit())) 
+                for game in games
+                ]).reshape(2,-1), axis=1,kind="stable"),
+            axis=1
+        ).T)
+
 for game in games:
     moves = np.load(os.path.join(path, game))
     fig, ax = plt.subplots()
