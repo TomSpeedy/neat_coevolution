@@ -25,6 +25,8 @@ CHAR_MAPPING = {
 }
 
 COLOR_MAPPING = ["black", "white", "blue", "green", "red"]
+FITNESS_HIDE_FILE = "./fitness/best_hide.npy"
+FITNESS_SEEK_FILE = "./fitness/best_seek.npy"
 
 ACTIONS = [[-1,0], [1, 0], [0,-1], [0, 1]]
 VISION = 1
@@ -134,4 +136,9 @@ for game in games:
     ani = FuncAnimation(fig, update, frames=moves,
                         init_func=init, blit=True, repeat=False)
     plt.show()
-
+    fits_seek = np.load(FITNESS_SEEK_FILE)
+    fits_hide = np.load(FITNESS_HIDE_FILE)
+    plt.scatter(np.arrange(0, fits_seek.shape[0]), fits_seek)
+    plt.show()
+    plt.scatter(np.arrange(0, fits_hide.shape[0]), fits_hide)
+    plt.show()
