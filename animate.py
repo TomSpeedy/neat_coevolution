@@ -30,7 +30,7 @@ CHAR_MAPPING = {
 
 COLOR_MAPPING = ["black", "white", "blue", "green", "red"]
 
-MAP_SIMPLE_NAME = "map.txt"
+MAP_SIMPLE_NAME = "map_dense.txt"
 
 ACTIONS = np.array([[-1,0], [1, 0], [0,-1], [0, 1]])
 ACTIONS_SEEKER =  np.array([[-1,0], [1, 0], [0,-1], [0, 1], [-1,-1], [-1,1], [1,-1],[1,1]])
