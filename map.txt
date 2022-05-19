@@ -1,7 +1,7 @@
 10
 10
 xxxxxxxxxx
-xHHHHH...x
+xHHHH....x
 xHHx.x.x.x
 x.x......x
 x...xxx..x

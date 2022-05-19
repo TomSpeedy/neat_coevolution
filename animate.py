@@ -36,7 +36,7 @@ ACTIONS = np.array([[-1,0], [1, 0], [0,-1], [0, 1]])
 VISION = 1
 SCENT = 5
 
-REWARD =100000
+REWARD =50
 
 class Map:
         
